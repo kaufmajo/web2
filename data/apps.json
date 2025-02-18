@@ -1,0 +1,49 @@
+[
+	{
+		"id": "app1",
+		"name": "laravel docker container tutorial",
+		"technology": "php, docker, mariadb, node",
+		"docker": true,
+		"port": "9100-9109"
+	},
+	{
+		"id": "app2",
+		"name": "chronos ui",
+		"technology": "angular",
+		"docker": false
+	},
+	{
+		"id": "app3",
+		"name": "node.js with docker",
+		"technology": "node, docker",
+		"docker": true
+	},
+	{
+		"id": "app6",
+		"name": "npm run dev entrypoint container",
+		"technology": "node, docker",
+		"docker": true
+	},
+	{
+		"id": "app7",
+		"name": "React ToDo List example - npx, npm entrypoint container - with vite/react",
+		"technology": "node, docker, vite, react",
+		"docker": true,
+		"port": "9110-9119",
+		"url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Frameworks_libraries/React_getting_started"
+	},
+	{
+		"id": "app8",
+		"name": "C# - Prepared Statement Example",
+		"technology": "C#",
+		"docker": false
+	},
+	{
+		"id": "web2",
+		"name": "WSL, VueJs example - with vite/vuejs",
+		"technology": "node, vite, vuejs",
+		"docker": false,
+		"port": "9120-9129",
+		"url": ""
+	}
+]
