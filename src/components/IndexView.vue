@@ -2,9 +2,10 @@
 import { ref, computed } from 'vue'
 import { useApi } from '../composables/useApi';
 import IndexItem from './IndexItem.vue'
-//import appdata from './../../data/apps.json'
+import appdata from './../../data/apps.json'
 
-const { data, error } = useApi('http://localhost:8889/api/get.php')
+//const { data, error } = useApi('http://localhost:8889/api/get.php')
+const data = ref(appdata)
 
 const formFilter = ref('');
 
