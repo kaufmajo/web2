@@ -1,11 +1,11 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useApi } from '../composables/useApi';
 import IndexItem from './IndexItem.vue'
 //import appdata from './../../data/apps.json'
 
-const { data, error, get, getOne } = useApi()
-get('http://localhost:8889/api/get.php')
+const { state, data, error, get, getOne } = useApi();
+get('http://localhost:8889/api/get.php');
 //const data = ref(appdata)
 
 const formFilter = ref('');
@@ -36,13 +36,14 @@ function updateItem() {
 
 function loadItem(item) {
 
-  item = (async () => await getOne('', item))();
+  getOne(item);
 
-  console.log(item);
-
-  formItem.value = Object.assign(formItem.value, item);
   window.scrollTo(0, 0);
 }
+
+watch(() => state.item, (newItem) => {
+  formItem.value = newItem;
+});
 
 function deleteItem(item) {
   if (confirm('Are you sure you want to delete this item?')) {

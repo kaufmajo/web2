@@ -1,8 +1,17 @@
-import { ref } from "vue";
+import { reactive, ref, toRefs } from "vue";
 
 export function useApi() {
 
+  const state = reactive({
+    data: [],
+    item: {},
+    error: null,
+    fetching: true,
+    message: ""
+  });
+
   const data = ref([])
+
   const error = ref(null)
 
   function get(url) {
@@ -11,33 +20,33 @@ export function useApi() {
       .then((res) => res.json())
       .then((json) => (data.value = json))
       .catch((err) => (error.value = err))
-
-    return data;
   }
 
-  async function getOne(url, payload) {
+ function getOne(item) {
 
-    const request = new Request("http://localhost:8889/api/get_one.php?id=app1", {
+    const request = new Request(`http://localhost:8889/api/get_one.php?id=${item.id}`, {
       method: "GET",
     });
 
-    const response = await fetch(request);
-    const json = await response.json();
+    const fetchData = async () => {
+      try {
+        const response = await fetch(request);
+        const json = await response.json();
+        state.item = json;
+        state.message = "Successful."
+      } catch (errors) {
+        state.error = errors;
+      } finally {
+        state.fetching = false;
+      }
+    }
 
-    return json;
+    fetchData();
+
+    return { ...toRefs(state) };
   }
 
-  function post(url) {
 
-  }
 
-  function put(url) {
-
-  }
-
-  function del(url) {
-
-  }
-
-  return { data, error, get, getOne, post, put, del }
+  return { data, error, get, getOne, state }
 }
