@@ -2,10 +2,11 @@
 import { ref, computed } from 'vue'
 import { useApi } from '../composables/useApi';
 import IndexItem from './IndexItem.vue'
-import appdata from './../../data/apps.json'
+//import appdata from './../../data/apps.json'
 
-//const { data, error } = useApi('http://localhost:8889/api/get.php')
-const data = ref(appdata)
+const { data, error, get, getOne } = useApi()
+get('http://localhost:8889/api/get.php')
+//const data = ref(appdata)
 
 const formFilter = ref('');
 
@@ -34,6 +35,11 @@ function updateItem() {
 }
 
 function loadItem(item) {
+
+  item = (async () => await getOne('', item))();
+
+  console.log(item);
+
   formItem.value = Object.assign(formItem.value, item);
   window.scrollTo(0, 0);
 }
@@ -43,6 +49,7 @@ function deleteItem(item) {
     data.value.splice(data.value.indexOf(item), 1);
   }
 }
+
 </script>
 
 <template>

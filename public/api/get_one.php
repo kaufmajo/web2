@@ -11,13 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     exit;
 }
 
-$data = json_decode(file_get_contents("php://input"));
+$id = $_GET['id'] ?? null;
 
-if (!isset($data->id) || null === $data->id) {
+if (!$id) {
     echo json_encode(['message' => "Error: Item ID is missing!"]);
     exit;
 }
-
 
 $db = new Database();
 $db = $db->connect();
@@ -25,7 +24,7 @@ $db = $db->connect();
 $itemModel = new ItemModel($db);
 $itemEntity = new ItemEntity();
 
-if ($row = $itemModel->fetchOne($data->id)) {
+if ($row = $itemModel->fetchOne($_GET['id'])) {
 
     echo json_encode($row);
 } else {
