@@ -7,7 +7,7 @@ class ItemEntity
     public ?string $url;
     public ?string $description;
     public ?string $technology;
-    public bool $docker = false;
+    public ?bool $docker;
     public ?string $port;
 
     public function extract(): array
@@ -26,12 +26,12 @@ class ItemEntity
     public function hydrate(array $data): static
     {
         $this->id = $data['id'];
-        $this->name = $data['name'];
-        $this->url = $data['url'];
-        $this->description = $data['description'];
-        $this->technology = $data['technology'];
-        $this->docker = $data['docker'];
-        $this->port = $data['port'];
+        $this->name = $data['name'] ?? "";
+        $this->url = $data['url'] ?? "";
+        $this->description = $data['description'] ?? "";
+        $this->technology = $data['technology'] ?? "";
+        $this->docker = $data['docker'] ?? false;
+        $this->port = $data['port'] ?? "";
 
         return $this;
     }

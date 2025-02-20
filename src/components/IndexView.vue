@@ -25,16 +25,22 @@ function loadItem(item) {
 function updateItem() {
   let item = data.rows.find((item) => item.id === data.item.id);
   if (item) {
-    put(data.item);
+    (async () => {
+      await put(data.item); get();
+    })();
   } else {
-    post(data.item);
+    (async () => {
+      await post(data.item); get();
+    })();
   }
   data.item = {};
 }
 
 function deleteItem(item) {
   if (confirm('Are you sure you want to delete this item?')) {
-    del(item);
+    (async () => {
+      await del(item); get();
+    })();
   }
 }
 
