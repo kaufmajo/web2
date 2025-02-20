@@ -33,3 +33,14 @@ npm run build
 ```sh
 npm run lint
 ```
+
+
+## If this is running within wsl
+
+### Access sqlite
+
+Inside WSL2 run command ... to link sqlite db into wsl
+
+```sh
+ln -s /mnt/c/Users/hans.muster/xxx/Devpool/App/web2/db.sqlite3 /var/www/web2/data/db.sqlite3
+```
