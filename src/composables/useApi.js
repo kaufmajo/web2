@@ -1,52 +1,97 @@
-import { reactive, ref, toRefs } from "vue";
+import { reactive, toRefs } from "vue";
 
 export function useApi() {
 
-  const state = reactive({
-    data: [],
+  const data = reactive({
+    rows: [],
     item: {},
     error: null,
     fetching: true,
-    message: ""
+    message: "",
+    result: null
   });
 
-  const data = ref([])
+  async function fetchMe(request) {
 
-  const error = ref(null)
+    data.message = ""
+    data.error = null
+    data.fetching = true
 
-  function get(url) {
-
-    fetch(url)
-      .then((res) => res.json())
-      .then((json) => (data.value = json))
-      .catch((err) => (error.value = err))
+    try {
+      const response = await fetch(request);
+      const json = await response.json();
+      data.message = "Successful."
+      data.result = json;
+    } catch (errors) {
+      data.error = errors;
+      data.message = "Error."
+    } finally {
+      data.fetching = false;
+    }
   }
 
- function getOne(item) {
+  async function get() {
+
+    const request = new Request(`http://localhost:8889/api/get.php`, {
+      method: "GET",
+    });
+
+    await fetchMe(request);
+    data.rows = data.result
+
+    return { ...toRefs(data) };
+  }
+
+  async function getOne(item) {
 
     const request = new Request(`http://localhost:8889/api/get_one.php?id=${item.id}`, {
       method: "GET",
     });
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch(request);
-        const json = await response.json();
-        state.item = json;
-        state.message = "Successful."
-      } catch (errors) {
-        state.error = errors;
-      } finally {
-        state.fetching = false;
-      }
-    }
+    await fetchMe(request);
+    data.item = data.result
 
-    fetchData();
-
-    return { ...toRefs(state) };
+    return { ...toRefs(data) };
   }
 
+  async function post(item) {
 
+    const request = new Request(`http://localhost:8889/api/post.php`, {
+      method: "POST",
+      body: JSON.stringify(item),
+    });
 
-  return { data, error, get, getOne, state }
+    await fetchMe(request);
+    data.item = data.result
+
+    return { ...toRefs(data) };
+  }
+
+  async function put(item) {
+
+    const request = new Request(`http://localhost:8889/api/put.php`, {
+      method: "PUT",
+      body: JSON.stringify(item),
+    });
+
+    await fetchMe(request);
+    data.item = data.result
+
+    return { ...toRefs(data) };
+  }
+
+  async function del(item) {
+
+    const request = new Request(`http://localhost:8889/api/delete.php`, {
+      method: "DELETE",
+      body: JSON.stringify(item),
+    });
+
+    await fetchMe(request);
+    data.item = data.result
+
+    return { ...toRefs(data) };
+  }
+
+  return { get, getOne, post, put, del, data }
 }

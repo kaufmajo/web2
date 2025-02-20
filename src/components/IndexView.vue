@@ -1,82 +1,72 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useApi } from '../composables/useApi';
 import IndexItem from './IndexItem.vue'
-//import appdata from './../../data/apps.json'
 
-const { state, data, error, get, getOne } = useApi();
-get('http://localhost:8889/api/get.php');
-//const data = ref(appdata)
+const { data, get, getOne, post, put, del } = useApi();
 
-const formFilter = ref('');
+const filterBy = ref('');
 
-const formItem = ref({
-  id: "",
-  name: "",
-  description: "",
-  technology: "",
-  docker: false,
-  ports: "",
-  url: ""
-});
+onMounted(() => {
+  get();
+})
 
 const filteredData = computed(() => {
-  return formFilter.value ? data.value.filter((item) => item.id.includes(formFilter.value)) : data.value;
+  return filterBy.value
+    ? data.rows.filter((item) => item.id.includes(filterBy.value))
+    : data.rows;
 });
-
-function updateItem() {
-  let item = data.value.find((item) => item.id === formItem.value.id);
-  if (item) {
-    Object.assign(item, formItem.value)
-  } else {
-    data.value.push(Object.assign({}, formItem.value))
-  }
-  formItem.value = {};
-}
 
 function loadItem(item) {
-
-  getOne(item);
-
   window.scrollTo(0, 0);
+  getOne(item);
 }
 
-watch(() => state.item, (newItem) => {
-  formItem.value = newItem;
-});
+function updateItem() {
+  let item = data.rows.find((item) => item.id === data.item.id);
+  if (item) {
+    put(data.item);
+  } else {
+    post(data.item);
+  }
+  data.item = {};
+}
 
 function deleteItem(item) {
   if (confirm('Are you sure you want to delete this item?')) {
-    data.value.splice(data.value.indexOf(item), 1);
+    del(item);
   }
 }
 
 </script>
 
 <template>
-  <div v-if="data.length">
+  <div v-if="data.rows.length">
+    <div>
+      {{ data.message }}
+    </div>
     <div style="margin-bottom: 25px;">
       <form @submit.prevent="updateItem">
         <div style="margin-bottom: 25px;">
-          <input v-model="formFilter" placeholder="Filter ...">
+          <input v-model="filterBy" placeholder="Filter ...">
         </div>
         <div>
-          <input v-model="formItem.id" placeholder="ID" required>
+          <input v-model="data.item.id" placeholder="ID" required>
         </div>
         <div>
-          <input v-model="formItem.name" placeholder="Name">
+          <input v-model="data.item.name" placeholder="Name">
         </div>
         <div>
-          <input v-model="formItem.technology" placeholder="Technology">
+          <input v-model="data.item.technology" placeholder="Technology">
         </div>
         <div>
-          <input v-model="formItem.docker" placeholder="Docker">
+          <input v-model="data.item.docker" placeholder="Docker">
         </div>
         <div>
-          <input v-model="formItem.port" placeholder="Ports">
+          <input v-model="data.item.port" placeholder="Ports">
         </div>
         <div>
-          <input v-model="formItem.url" placeholder="Url">
+          <input v-model="data.item.url" placeholder="Url">
         </div>
         <div>
           <button>Update</button>

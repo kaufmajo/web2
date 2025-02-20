@@ -3,12 +3,12 @@
 class ItemEntity
 {
     public string $id;
-    public string $name;
-    public string $url;
-    public string $description;
-    public string $technology;
-    public bool $docker;
-    public string $port;
+    public ?string $name;
+    public ?string $url;
+    public ?string $description;
+    public ?string $technology;
+    public bool $docker = false;
+    public ?string $port;
 
     public function extract(): array
     {
